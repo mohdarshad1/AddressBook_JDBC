@@ -9,7 +9,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AddressBookDBService {
 
@@ -72,13 +74,14 @@ public class AddressBookDBService {
 			while (resultSet.next()) {
 				String firstName = resultSet.getString("FirstName");
 				String lastName = resultSet.getString("LastName");
-				String start = resultSet.getString("Start");
+				String Start = resultSet.getString("Start");
 				String address = resultSet.getString("Address");
 				String city = resultSet.getString("City");
 				String state = resultSet.getString("State");
 				String zip = resultSet.getString("Zip");
 				String phoneNo = resultSet.getString("PhoneNo");
 				String email = resultSet.getString("Email");
+			
 				addressBookData
 						.add(new AddressBookData(firstName, lastName, start, address, city, state, zip, phoneNo, email));
 			}
@@ -149,7 +152,7 @@ public class AddressBookDBService {
 		int id = -1;
 		AddressBookData addressBookData = null;
 		String query = String.format(
-				"insert into addressBook(FirstName, LastName, Date, Address, City, State, Zip, PhoneNo, Email) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s','%s')",
+				"insert into addressBook(FirstName, LastName, Start, Address, City, State, Zip, PhoneNo, Email) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s','%s')",
 				firstName, lastName, start, address, city, state, zip, phoneNo, email);
 		try (Connection connection = this.getConnection()) {
 			Statement statement = connection.createStatement();
@@ -159,11 +162,38 @@ public class AddressBookDBService {
 				if (resultSet.next())
 					id = resultSet.getInt(1);
 			}
-			addressBookData = new AddressBookData(firstName, lastName, start, address, city, state, zip, phoneNo, email);
+			addressBookData = new AddressBookData(firstName, lastName, address, city, state, zip, phoneNo, email, date);
 		} catch (SQLException e) {
 			throw new AddressBookException(e.getMessage(), AddressBookException.ExceptionType.DATABASE_EXCEPTION);
 		}
 		return addressBookData;
 	}
 
+	public void addMultipleContactsToDBUsingThread(List<AddressBookData> record) {
+		Map<Integer, Boolean> addressAdditionStatus = new HashMap<Integer, Boolean>();
+		record.forEach(addressbookdata -> {
+			Runnable task = () -> {
+				addressAdditionStatus.put(addressbookdata.hashCode(), false);
+				System.out.println("Contact Being Added:" + Thread.currentThread().getName());
+				try {
+					this.addNewContact(addressbookdata.getFirstName(), addressbookdata.getLastName(),
+							addressbookdata.getAddress(), addressbookdata.getCity(), addressbookdata.getState(),
+							addressbookdata.getZip(), addressbookdata.getPhoneNo(), addressbookdata.getEmail(),
+							addressbookdata.getDate());
+				} catch (AddressBookException e) {
+					e.printStackTrace();
+				}
+				addressAdditionStatus.put(addressbookdata.hashCode(), true);
+				System.out.println("Contact Added:" + Thread.currentThread().getName());
+			};
+			Thread thread = new Thread(task, addressbookdata.getFirstName());
+			thread.start();
+		});
+		while (addressAdditionStatus.containsValue(false)) {
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+			}
+		}
+	}
 }

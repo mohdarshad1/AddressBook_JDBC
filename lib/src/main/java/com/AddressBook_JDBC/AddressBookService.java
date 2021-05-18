@@ -66,7 +66,10 @@ public class AddressBookService {
 	public void addNewContact(String firstName, String lastName, String start, String address, String city, String state, String zip,
 			String phoneNo, String email) throws AddressBookException {
 		addressBookList.add(addressBookDBService.addNewContact(firstName, lastName, address, city, state, zip, phoneNo,
-				email, start));
+				email, date));
 	}
 
+	public void addMultipleContactsToDBUsingThreads(List<AddressBookData> record) {
+		addressBookDBService.addMultipleContactsToDBUsingThread(record);
+	}
 }

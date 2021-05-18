@@ -1,23 +1,19 @@
 package com.AddressBook_JDBC;
 
-import java.sql.Date;
-
 public class AddressBookData {
 
 	String firstName;
 	String lastName;
-	String start;
 	String address;
 	String city;
 	String state;
 	String zip;
 	String phoneNo;
 	String email;
-	
+	String start;
 
 	public AddressBookData(String firstName, String lastName, String start, String address, String city, String state, String zip,
 			String phoneNo, String email) {
-		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.address = address;
@@ -27,7 +23,6 @@ public class AddressBookData {
 		this.phoneNo = phoneNo;
 		this.email = email;
 		this.start = start;
-
 	}
 
 	public String getDate() {
@@ -126,11 +121,6 @@ public class AddressBookData {
 			if (other.city != null)
 				return false;
 		} else if (!city.equals(other.city))
-			return false;
-		if (start == null) {
-			if (other.start != null)
-				return false;
-		} else if (!start.equals(other.start))
 			return false;
 		if (email == null) {
 			if (other.email != null)
