@@ -1,18 +1,22 @@
 package com.AddressBook_JDBC;
 
+import java.sql.Date;
+
 public class AddressBookData {
 
 	String firstName;
 	String lastName;
+	String start;
 	String address;
 	String city;
 	String state;
 	String zip;
 	String phoneNo;
 	String email;
+	
 
-	public AddressBookData(String firstName, String lastName, String address, String city, String state, String phoneNo,
-			String email) {
+	public AddressBookData(String firstName, String lastName, String start, String address, String city, String state, String zip,
+			String phoneNo, String email) {
 		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -22,7 +26,16 @@ public class AddressBookData {
 		this.zip = zip;
 		this.phoneNo = phoneNo;
 		this.email = email;
+		this.start = start;
 
+	}
+
+	public String getDate() {
+		return start;
+	}
+
+	public void setDate(String start) {
+		this.start = start;
 	}
 
 	public String getFirstName() {
@@ -113,6 +126,11 @@ public class AddressBookData {
 			if (other.city != null)
 				return false;
 		} else if (!city.equals(other.city))
+			return false;
+		if (start == null) {
+			if (other.start != null)
+				return false;
+		} else if (!start.equals(other.start))
 			return false;
 		if (email == null) {
 			if (other.email != null)
