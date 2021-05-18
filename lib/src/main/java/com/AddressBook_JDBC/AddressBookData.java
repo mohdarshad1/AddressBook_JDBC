@@ -11,7 +11,7 @@ public class AddressBookData {
 	String phoneNo;
 	String email;
 
-	public AddressBookData(String firstName, String lastName, String address, String city, String state, String zip, String phoneNo,
+	public AddressBookData(String firstName, String lastName, String address, String city, String state, String phoneNo,
 			String email) {
 		super();
 		this.firstName = firstName;

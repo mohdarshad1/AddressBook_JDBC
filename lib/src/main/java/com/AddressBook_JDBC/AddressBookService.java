@@ -58,4 +58,8 @@ public class AddressBookService {
 		}
 	}
 
+	public int readAddressBookData(String function, String city) throws AddressBookException {
+		return addressBookDBService.readDataBasedOnCity(function, city);
+	}
+
 }
